@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="favicon.png" />
+    <title>Dicoding Stories</title>
+  </head>
+  <body>
+    <header>
+      <a href="#main-content" class="skip-link">Lewati ke Konten Utama</a>
+      <div class="main-header container">
+        <a class="brand-name" aria-label="Nama Website">Dicoding Stories</a>
+
+        <nav
+          id="navigation-drawer"
+          class="navigation-drawer"
+          aria-label="Navigasi"
+        >
+          <ul id="nav-list" class="nav-list"></ul>
+        </nav>
+
+        <button
+          id="drawer-button"
+          class="drawer-button"
+          aria-label="Tombol Drawer"
+        >
+          ☰
+        </button>
+      </div>
+    </header>
+
+    <main id="main-content" class="main-content" tabindex="0">
+      <!-- Konten utama, pastikan heading seperti <h1>, <h2> berurutan -->
+    </main>
+
+    <footer>
+      <p>&copy; 2025 Dicoding Stories</p>
+    </footer>
+
+    <script>
+      window.addEventListener('DOMContentLoaded', () => {
+        const skipLink = document.querySelector('.skip-link');
+        skipLink.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            const main = document.getElementById('main-content');
+            if (main) {
+              main.focus();
+            }
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,88 @@
+.lightbox-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(136, 14, 79, 0.8); /* dark pink translucent */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Container */
+.lightbox-container {
+  background-color: #fff0f5; /* light pink */
+  border-radius: 10px;
+  padding: 2rem;
+  max-width: 90%;
+  max-height: 90%;
+  overflow-y: auto;
+  box-shadow: 0 5px 25px rgba(255, 105, 180, 0.3); /* pink shadow */
+  position: relative;
+  animation: scaleIn 0.3s ease-in-out;
+}
+
+/* Close button */
+.lightbox-close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(136, 14, 79, 0.7);
+  color: #fff;
+  border: none;
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 50%;
+  padding: 0.5rem 0.7rem;
+  transition: background 0.2s ease-in-out;
+}
+
+.lightbox-close-btn:hover {
+  background: rgba(136, 14, 79, 0.9);
+}
+
+/* Lightbox content */
+.lightbox-title {
+  margin-top: 0;
+  font-size: 1.5rem;
+  color: #ad1457; /* deep pink */
+}
+
+.lightbox-description {
+  margin: 1rem 0;
+  color: #6a1b9a; /* purple-pink */
+  line-height: 1.5;
+}
+
+.lightbox-date {
+  font-size: 0.875rem;
+  color: #ab47bc; /* soft lavender-pink */
+  text-align: right;
+  display: block;
+  margin-top: 1rem;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    background-color: rgba(136, 14, 79, 0);
+  }
+  to {
+    background-color: rgba(136, 14, 79, 0.8);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
