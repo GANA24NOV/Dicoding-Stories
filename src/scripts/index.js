@@ -1,19 +1,27 @@
 // CSS imports
 import '../styles/main.css';
 import App from './pages/app';
-import CONFIG from './config.js'; // pastikan config.js pakai "export default"
+import CONFIG from './config.js'; // pastikan export default
 
-document.addEventListener('DOMContentLoaded', async () => {
-  const app = new App({
+let appInstance = null;
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Inisialisasi App
+  appInstance = new App({
     content: document.querySelector('#main-content'),
     drawerButton: document.querySelector('#drawer-button'),
     navigationDrawer: document.querySelector('#navigation-drawer'),
   });
-  await app.renderPage();
 
-  window.addEventListener('hashchange', async () => {
-    await app.renderPage();
-  });
+  const renderAppPage = async () => {
+    await appInstance.renderPage();
+  };
+
+  // Jalankan render pertama
+  renderAppPage();
+
+  // Jalankan ulang jika hash berubah (navigasi)
+  window.addEventListener('hashchange', renderAppPage);
 });
 
 // Minta izin notifikasi
@@ -31,11 +39,11 @@ function urlBase64ToUint8Array(base64String) {
   return Uint8Array.from([...rawData].map((char) => char.charCodeAt(0)));
 }
 
-// Register service worker dan subscribe push
+// Register Service Worker & Push Notification
 if ('serviceWorker' in navigator && 'PushManager' in window) {
   window.addEventListener('load', async () => {
     try {
-      const registration = await navigator.serviceWorker.register('./sw.bundle.js');
+      const registration = await navigator.serviceWorker.register('./sw.js');
       console.log('✅ Service Worker registered!', registration);
 
       const permission = await Notification.requestPermission();

@@ -33,6 +33,10 @@ module.exports = {
           from: path.resolve(__dirname, 'node_modules/leaflet/dist/images/'),
           to: path.resolve(__dirname, 'dist/images/'),
         },
+         {
+      from: path.resolve(__dirname, 'src/scripts/sw.js'),
+      to: path.resolve(__dirname, 'dist/sw.js'),
+    },
       ],
     }),
   ],

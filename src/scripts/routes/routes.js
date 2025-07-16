@@ -32,6 +32,12 @@ const routes = {
     redirectIfAuth: true,
     title: 'Register',
   },
+  // Opsional: fallback route jika route tidak ditemukan
+  '/': {
+    component: new HomePage(),
+    authRequired: true,
+    title: 'Home',
+  },
 };
 
 export default routes;

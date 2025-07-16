@@ -7,7 +7,7 @@ export default class RegisterPage {
 
   async render() {
     return `
-      <main id="main-content" class="container" tabindex="0">
+      <section class="container view-transition-content" tabindex="0">
         <div id="globalLoadingOverlay" class="global-loading-overlay">
           <div class="loading-spinner"></div>
           <div class="loading-text">Proses Register...</div>
@@ -61,7 +61,7 @@ export default class RegisterPage {
             <p>Sudah punya akun? silahkan <a href="#/login">login disini</a></p>
           </form>
         </div>
-      </main>
+      </section>
     `;
   }
 
@@ -110,13 +110,15 @@ export default class RegisterPage {
   }
 
   showRegisterError(message) {
-    const errorMessage = document.getElementById('registerError'); // diperbaiki ID-nya
+    const errorMessage = document.getElementById('registerError');
     if (errorMessage) {
       errorMessage.hidden = false;
       errorMessage.textContent = message;
     } else {
       console.log('errorMessage ID tidak ditemukan!');
     }
+
+    this.hideLoading();
   }
 
   navigateToLogin() {

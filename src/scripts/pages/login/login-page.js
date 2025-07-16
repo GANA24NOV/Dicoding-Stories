@@ -5,53 +5,54 @@ export default class LoginPage {
   #loadingIndicator = null;
   #globalLoadingOverlay = null;
 
-  async render() {
-    return `
-      <main id="main-content" class="container view-transition-content" tabindex="0">
-        <div id="globalLoadingOverlay" class="global-loading-overlay">
-          <div class="loading-spinner"></div>
-          <div class="loading-text">Proses Login...</div>
-        </div>
+ async render() {
+  return `
+    <section class="container view-transition-content" tabindex="0">
+      <div id="globalLoadingOverlay" class="global-loading-overlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Proses Login...</div>
+      </div>
 
-        <div class="container-flex">
-          <form class="container-flex-form" id="formLogin">
-            <h1>Login Page</h1>
-            <p>Silahkan masukkan email dan password untuk masuk ke dalam web</p>
+      <div class="container-flex">
+        <form class="container-flex-form" id="formLogin">
+          <h1>Login Page</h1>
+          <p>Silahkan masukkan email dan password untuk masuk ke dalam web</p>
 
-            <div class="form-group">
-              <label for="email-input">Email</label>
-              <input
-                type="email"
-                id="email-input"
-                name="email"
-                autocomplete="email"
-                placeholder="email@gmail.com"
-                required
-              />
-            </div>
+          <div class="form-group">
+            <label for="email-input">Email</label>
+            <input
+              type="email"
+              id="email-input"
+              name="email"
+              autocomplete="email"
+              placeholder="email@gmail.com"
+              required
+            />
+          </div>
 
-            <div class="form-group">
-              <label for="password-input">Password</label>
-              <input
-                type="password"
-                id="password-input"
-                name="password"
-                autocomplete="current-password"
-                placeholder="password"
-                required
-              />
-            </div>
+          <div class="form-group">
+            <label for="password-input">Password</label>
+            <input
+              type="password"
+              id="password-input"
+              name="password"
+              autocomplete="current-password"
+              placeholder="password"
+              required
+            />
+          </div>
 
-            <p class="error-message" id="loginError" hidden></p>
+          <p class="error-message" id="loginError" hidden></p>
 
-            <button class="confirm-button">Login</button>
+          <button class="confirm-button">Login</button>
 
-            <p>Belum punya akun? silahkan <a href="#/register">register disini</a></p>
-          </form>
-        </div>
-      </main>
-    `;
-  }
+          <p>Belum punya akun? silahkan <a href="#/register">register disini</a></p>
+        </form>
+      </div>
+    </section>
+  `;
+}
+
 
   async afterRender() {
     await new Promise((resolve) => setTimeout(resolve, 50));

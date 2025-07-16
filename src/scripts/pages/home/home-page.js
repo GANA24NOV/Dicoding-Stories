@@ -9,9 +9,9 @@ export default class HomePage {
   #globalLoadingOverlay = null;
   #lightboxManager;
 
-async render() {
+  async render() {
   return `
-    <main id="main-content" class="container view-transition-content homepage-section" tabindex="0">
+    <section class="container view-transition-content homepage-section">
       <div id="globalLoadingOverlay" class="global-loading-overlay" aria-label="Loading content">
         <div class="loading-spinner"></div>
         <div class="loading-text">✨ Sedang memuat cerita-cerita terbaik...</div>
@@ -25,9 +25,10 @@ async render() {
       <div class="stories-container" aria-label="Container story pengguna">
         <div class="loading-indicator">💭 Tunggu sebentar ya, kami sedang mengambil cerita...</div>
       </div>
-    </main>
+    </section>
   `;
 }
+
 
   async afterRender() {
     this.#storiesContainer = document.querySelector('.stories-container');
@@ -39,16 +40,18 @@ async render() {
       return;
     }
 
-    this.hideLoading();
+    this.showLoading(); // ⬅️ Tampilkan loading lebih awal
+
     this.#lightboxManager = new LightboxManager();
     this.#presenter = new HomePresenter({ view: this });
+
     try {
-      this.showLoading();
       await this.#presenter.init();
     } catch (error) {
       this.showError('GAGAL MEMUAT CERITA');
       this.showConsoleError('Error initializing HomePresenter:', error);
-      this.hideLoading();
+    } finally {
+      this.hideLoading(); // ⬅️ Sembunyikan setelah semua proses selesai
     }
   }
 
@@ -70,7 +73,7 @@ async render() {
     }
   }
 
-  showStories(stories) {
+  async showStories(stories) {
     if (!this.#storiesContainer) return;
 
     if (!stories || stories.length === 0) {
@@ -78,9 +81,14 @@ async render() {
       return;
     }
 
-    this.#storiesContainer.innerHTML = stories
-      .map((story) => `<div class="story-animation">${new StoryCard(story).render()}</div>`)
-      .join('');
+    const renderedCards = await Promise.all(
+      stories.map(async (story) => {
+        const card = new StoryCard(story);
+        return `<div class="story-animation">${await card.render()}</div>`;
+      })
+    );
+
+    this.#storiesContainer.innerHTML = renderedCards.join('');
   }
 
   attachStoryCardListeners(stories) {

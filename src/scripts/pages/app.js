@@ -12,6 +12,7 @@ class App {
     this.#drawerButton = drawerButton;
     this.#navigationDrawer = navigationDrawer;
 
+    // Redirect default ke homepage jika hash kosong
     if (
       window.location.hash === '#/' ||
       window.location.hash === '' ||
@@ -21,7 +22,7 @@ class App {
     }
 
     this._setupDrawer();
-    this.renderPage();
+    // renderPage dipanggil dari index.js, bukan di sini
   }
 
   _setupDrawer() {
@@ -32,19 +33,10 @@ class App {
 
     document.body.addEventListener('click', (event) => {
       const path = event.composedPath();
-      const isClickInsideDrawer = path.some(
-        (el) => el === this.#navigationDrawer
-      );
+      const isClickInsideDrawer = path.some((el) => el === this.#navigationDrawer);
       const isClickOnButton = path.some((el) => el === this.#drawerButton);
 
       if (!isClickInsideDrawer && !isClickOnButton) {
-        this.#navigationDrawer.classList.remove('open');
-      }
-
-      if (
-        !this.#navigationDrawer.contains(event.target) &&
-        !this.#drawerButton.contains(event.target)
-      ) {
         this.#navigationDrawer.classList.remove('open');
       }
 
@@ -59,15 +51,16 @@ class App {
   _updateNavigation() {
     const authLinks = isLoggedIn()
       ? `
-      <li><a href="#/homepage" aria-label="Tombol ke Homepage" >Homepage</a></li>
-      <li><a href="#/map" aria-label="Tombol ke Map Page">Map</a></li>
-      <li><a href="#/add-story" aria-label="Tombol ke Add Story Page">Add Story</a><li>
-      <li><button id="logoutBtn" aria-label="Tombol Log Out">Logout</button></li>
-    `
+        <li><a href="#/homepage" aria-label="Tombol ke Homepage">Homepage</a></li>
+        <li><a href="#/map" aria-label="Tombol ke Map Page">Map</a></li>
+        <li><a href="#/add-story" aria-label="Tombol ke Add Story Page">Add Story</a></li>
+        <li><button id="logoutBtn" aria-label="Tombol Log Out">Logout</button></li>
+      `
       : `
-      <li><a href="#/login" aria-label="Tombol Ke Login Page">Login</a></li>
-      <li><a href="#/register" aria-label="Tombol ke Register Page">Register</a></li>
-    `;
+        <li><a href="#/login" aria-label="Tombol ke Login Page">Login</a></li>
+        <li><a href="#/register" aria-label="Tombol ke Register Page">Register</a></li>
+      `;
+
     const navList = this.#navigationDrawer.querySelector('.nav-list');
     navList.innerHTML = authLinks;
 
@@ -76,7 +69,7 @@ class App {
       logoutBtn.addEventListener('click', () => {
         clearAuthData();
         window.location.hash = '#/login';
-        console.log('LOGOUT SUCCESS!');
+        console.log('🚪 Logout sukses!');
       });
     }
   }
@@ -88,13 +81,15 @@ class App {
 
     if (routeInfo.redirect) {
       window.location.hash = routeInfo.redirect;
+      return;
     }
 
+    // Destroy halaman sebelumnya jika ada
     if (this.#currentPage && typeof this.#currentPage.destroy === 'function') {
       try {
         this.#currentPage.destroy();
       } catch (error) {
-        console.error('Erro dalam destroy sebelumnya:', error);
+        console.error('❌ Error saat destroy sebelumnya:', error);
       }
     }
 
@@ -103,12 +98,22 @@ class App {
     if (routeInfo.component) {
       this.#currentPage = routeInfo.component;
 
-      this.#content.innerHTML = await this.#currentPage.render();
-      await this.#currentPage.afterRender();
-      document.title = routeInfo.title || 'App';
+      if (this.#content) {
+        try {
+          // 🔥 FIX UTAMA: render langsung ke this.#content, bukan cari .page-container
+          this.#content.innerHTML = await this.#currentPage.render();
+          await this.#currentPage.afterRender();
+          document.title = routeInfo.title || 'App';
+        } catch (error) {
+          console.error('❌ Error saat renderPage:', error);
+          this.#content.innerHTML = '<p class="error-message">Terjadi kesalahan saat memuat halaman.</p>';
+        }
+      }
     } else {
-      this.#content.innerHTML = '<p>Page not found</p>';
-      document.title = 'Not Found';
+      if (this.#content) {
+        this.#content.innerHTML = '<p class="error-message">❌ Page not found</p>';
+        document.title = 'Not Found';
+      }
       this.#currentPage = null;
     }
   }

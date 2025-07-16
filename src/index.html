@@ -3,8 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="shortcut icon" href="favicon.png" />
     <title>Dicoding Stories</title>
+
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#3f51b5" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <link rel="shortcut icon" href="favicon.png" />
   </head>
   <body>
     <header>
@@ -31,7 +36,7 @@
     </header>
 
     <main id="main-content" class="main-content" tabindex="0">
-      <!-- Konten utama, pastikan heading seperti <h1>, <h2> berurutan -->
+      <div class="page-container"></div>
     </main>
 
     <footer>
@@ -51,5 +56,8 @@
         });
       });
     </script>
+
+    <!-- ✅ Tambahkan ini -->
+    <script type="module" src="./scripts/index.js"></script>
   </body>
 </html>

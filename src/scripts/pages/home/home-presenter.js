@@ -13,14 +13,11 @@ export default class HomePresenter {
 
   async init() {
     try {
-      this.#view.showLoading();
-
+      // Loading ditampilkan oleh view sebelum pemanggilan init
       await this.getAllStories();
-
       this.#prepareStoriesArray();
-      this.#view.showStories(this.#storiesData);
+      await this.#view.showStories(this.#storiesArray);
       this.#view.attachStoryCardListeners(this.#storiesArray);
-      this.#view.hideLoading();
     } catch (error) {
       this.#view.showError('Terjadi kesalahan saat memuat data.');
       this.#view.showConsoleError?.('Error during initialization:', error);
@@ -30,7 +27,7 @@ export default class HomePresenter {
   async getAllStories() {
     try {
       const stories = await this.#model.getAllStories();
-      this.#storiesData = stories.listStory || [];
+      this.#storiesData = stories?.listStory || [];
       return this.#storiesData;
     } catch (error) {
       this.#view.showError('Gagal memuat cerita!');
