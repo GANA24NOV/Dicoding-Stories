@@ -1,12 +1,12 @@
 const CACHE_NAME = 'story-app-v1';
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/app.bundle.js',
-  '/app.css',
-  '/manifest.json',
-  '/icons/icon-192x192.png',
-  '/icons/icon-512x512.png',
+  '/Dicoding-Stories/',
+  '/Dicoding-Stories/index.html',
+  '/Dicoding-Stories/app.bundle.js',
+  '/Dicoding-Stories/app.css',
+  '/Dicoding-Stories/manifest.json',
+  '/Dicoding-Stories/icons/icon-192x192.png',
+  '/Dicoding-Stories/icons/icon-512x512.png',
 ];
 
 // ✅ Install service worker & cache file statis
@@ -20,7 +20,7 @@ self.addEventListener('install', (event) => {
   self.skipWaiting();
 });
 
-// ✅ Activate service worker & hapus cache lama (jika ada)
+// ✅ Activate service worker & hapus cache lama
 self.addEventListener('activate', (event) => {
   console.log('✅ Service Worker: activated');
   event.waitUntil(
@@ -44,9 +44,10 @@ self.addEventListener('fetch', (event) => {
     caches.match(event.request).then((response) => {
       return (
         response ||
-        fetch(event.request).catch(() =>
-          caches.match('/index.html') // fallback jika request gagal
-        )
+        fetch(event.request).catch((err) => {
+          console.error('Fetch failed; returning fallback.', err);
+          return caches.match('/Dicoding-Stories/index.html');
+        })
       );
     })
   );
@@ -66,8 +67,8 @@ self.addEventListener('push', function (event) {
   const title = data.title || 'Story App';
   const options = {
     body: data.message || 'Notifikasi baru dari Dicoding!',
-    icon: '/icons/icon-192x192.png',
-    badge: '/icons/icon-192x192.png',
+    icon: '/Dicoding-Stories/icons/icon-192x192.png',
+    badge: '/Dicoding-Stories/icons/icon-192x192.png',
   };
 
   event.waitUntil(self.registration.showNotification(title, options));
