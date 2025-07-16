@@ -10,25 +10,24 @@ export default class HomePage {
   #lightboxManager;
 
   async render() {
-  return `
-    <section class="container view-transition-content homepage-section">
-      <div id="globalLoadingOverlay" class="global-loading-overlay" aria-label="Loading content">
-        <div class="loading-spinner"></div>
-        <div class="loading-text">✨ Sedang memuat cerita-cerita terbaik...</div>
-      </div>
+    return `
+      <section class="container view-transition-content homepage-section">
+        <div id="globalLoadingOverlay" class="global-loading-overlay" aria-label="Loading content">
+          <div class="loading-spinner"></div>
+          <div class="loading-text">✨ Sedang memuat cerita-cerita terbaik...</div>
+        </div>
 
-      <div class="heading--container">
-        <h1 class="pink-heading">📚 Kumpulan Cerita</h1>
-        <p class="heading-desc">Temukan kisah dan pengalaman menarik dari pengguna lainnya!</p>
-      </div>
+        <div class="heading--container">
+          <h1 class="pink-heading">📚 Kumpulan Cerita</h1>
+          <p class="heading-desc">Temukan kisah dan pengalaman menarik dari pengguna lainnya!</p>
+        </div>
 
-      <div class="stories-container" aria-label="Container story pengguna">
-        <div class="loading-indicator">💭 Tunggu sebentar ya, kami sedang mengambil cerita...</div>
-      </div>
-    </section>
-  `;
-}
-
+        <div class="stories-container" aria-label="Container story pengguna">
+          <div class="loading-indicator">💭 Tunggu sebentar ya, kami sedang mengambil cerita...</div>
+        </div>
+      </section>
+    `;
+  }
 
   async afterRender() {
     this.#storiesContainer = document.querySelector('.stories-container');
@@ -40,7 +39,7 @@ export default class HomePage {
       return;
     }
 
-    this.showLoading(); // ⬅️ Tampilkan loading lebih awal
+    this.showLoading();
 
     this.#lightboxManager = new LightboxManager();
     this.#presenter = new HomePresenter({ view: this });
@@ -51,7 +50,7 @@ export default class HomePage {
       this.showError('GAGAL MEMUAT CERITA');
       this.showConsoleError('Error initializing HomePresenter:', error);
     } finally {
-      this.hideLoading(); // ⬅️ Sembunyikan setelah semua proses selesai
+      this.hideLoading();
     }
   }
 
@@ -76,19 +75,26 @@ export default class HomePage {
   async showStories(stories) {
     if (!this.#storiesContainer) return;
 
+    this.#storiesContainer.innerHTML = '';
+
     if (!stories || stories.length === 0) {
-      this.#storiesContainer.innerHTML = '<p class="empty-message">💔 Belum ada cerita yang tersedia...</p>';
+      const emptyMsg = document.createElement('p');
+      emptyMsg.className = 'empty-message';
+      emptyMsg.textContent = '💔 Belum ada cerita yang tersedia...';
+      this.#storiesContainer.appendChild(emptyMsg);
       return;
     }
 
-    const renderedCards = await Promise.all(
-      stories.map(async (story) => {
-        const card = new StoryCard(story);
-        return `<div class="story-animation">${await card.render()}</div>`;
-      })
-    );
+    for (const story of stories) {
+      const card = new StoryCard(story);
+      const cardElement = await card.render(); // HTMLElement
 
-    this.#storiesContainer.innerHTML = renderedCards.join('');
+      const wrapper = document.createElement('div');
+      wrapper.className = 'story-animation';
+      wrapper.appendChild(cardElement);
+
+      this.#storiesContainer.appendChild(wrapper);
+    }
   }
 
   attachStoryCardListeners(stories) {
