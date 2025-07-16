@@ -139,6 +139,12 @@ textarea {
 .skip-link:focus {
   top: 0;
 }
+::view-transition-old(root),
+::view-transition-new(root) {
+  background: none !important;
+  animation: none !important;
+  mix-blend-mode: normal !important;
+}
 
 
 
